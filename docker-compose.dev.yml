@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -46,6 +44,23 @@ services:
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: uwh_phpmyadmin_dev
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USER:-uwh_user}
+      PMA_PASSWORD: ${DB_PASSWORD:-uwh_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - uwh_network_dev
 
 volumes:
   mysql_data_dev:

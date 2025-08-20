@@ -43,6 +43,7 @@ ENV/
 .idea/
 *.swp
 *.swo
+WARP.md
 
 # OS
 .DS_Store

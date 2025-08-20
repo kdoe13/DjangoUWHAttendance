@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -38,6 +36,23 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
       - ./:/app
+    depends_on:
+      - db
+    networks:
+      - uwh_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: uwh_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USER:-uwh_user}
+      PMA_PASSWORD: ${DB_PASSWORD:-uwh_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+    ports:
+      - "8080:80"
     depends_on:
       - db
     networks:
